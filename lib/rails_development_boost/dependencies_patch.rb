@@ -1,6 +1,9 @@
 module RailsDevelopmentBoost
   module DependenciesPatch
     def self.apply!
+      # retain the original method in case the application overwrites it on its modules/klasses
+      Module.send :alias_method, :_mod_name, :name
+      
       patch = self
       ActiveSupport::Dependencies.module_eval do
         remove_method :remove_unloadable_constants!
@@ -136,7 +139,7 @@ module RailsDevelopmentBoost
     def fetch_module_cache
       return(yield(module_cache)) if module_cache.any?
       
-      ObjectSpace.each_object(Module) { |mod| module_cache << mod unless (mod.name || "").empty? }
+      ObjectSpace.each_object(Module) { |mod| module_cache << mod unless (mod._mod_name || "").empty? }
       begin
         yield module_cache
       ensure
