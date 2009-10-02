@@ -92,7 +92,7 @@ module RailsDevelopmentBoost
     
     def clear_tracks_of_removed_const(const_name)
       autoloaded_constants.delete(const_name)
-      module_cache.delete_if { |mod| mod.name == const_name }
+      module_cache.delete_if { |mod| mod._mod_name == const_name }
       file_map.dup.each do |path, file|
         file.constants.delete(const_name)
         if file.constants.empty?
@@ -107,8 +107,8 @@ module RailsDevelopmentBoost
         modules.dup.each do |other|
           next unless other < mod || other.metaclass.ancestors.include?(mod)
           next unless other.superclass == mod if Class === mod
-          next unless qualified_const_defined?(other.name) && other.name.constantize == other
-          remove_constant(other.name)
+          next unless qualified_const_defined?(other._mod_name) && other._mod_name.constantize == other
+          remove_constant(other._mod_name)
         end
       end
     end
