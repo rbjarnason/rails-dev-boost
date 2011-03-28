@@ -3,7 +3,7 @@ module RailsDevelopmentBoost
     ReferencePatch.apply!
     DependenciesPatch.apply!
     DescendantsTrackerPatch.apply!
-    ObservablePatch.apply!
+    #ObservablePatch.apply!
     
     # this should go into ActiveSupport.on_load(:action_pack), alas Rails doesn't provide it
     if defined?(ActionDispatch::Reloader) # post 0f7c970
